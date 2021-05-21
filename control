@@ -1,0 +1,9 @@
+Package: com.pookjw.pnamulove
+Name: PnamuLove
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Hearthstone Deck Tracker
+Maintainer: pookjw
+Author: pookjw
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000)
