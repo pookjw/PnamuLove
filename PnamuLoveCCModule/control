@@ -1,8 +1,8 @@
-Package: com.pookjw.pnamulove
-Name: PnamuLove
+Package: com.pookjw.pnamuloveccmodule
+Name: PnamuLoveCCModule
 Version: 1.0
 Architecture: iphoneos-arm
-Description: Hearthstone Deck Tracker
+Description: Hearthstone Deck Tracker Helper
 Maintainer: pookjw
 Author: pookjw
 Section: Tweaks
