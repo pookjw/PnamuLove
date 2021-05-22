@@ -33,6 +33,8 @@
         NSLog(@"Already observing!");
         return;
     }
+
+    NSLog(@"Starting LogReader...");
     
     self.readTimer = [NSTimer scheduledTimerWithTimeInterval:1
                                              target:self
@@ -49,7 +51,7 @@
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
         NSArray<NSString *> * newLogArrayOfZone = [self newLogArrayOfZone];
         if (newLogArrayOfZone.count > 0) {
-            [NSNotificationCenter.defaultCenter postNotificationName:LogReaderZoneNotificationName
+            [NSNotificationCenter.defaultCenter postNotificationName:kLogReaderZoneNotificationName
                                                    object:self
                                                  userInfo:@{@"log": newLogArrayOfZone}];
         }
@@ -66,7 +68,8 @@
     
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(NSString *str,
                                                                    NSDictionary<NSString *,id> * _Nullable bindings) {
-        return ![str isEqualToString:@""];
+        // return ![str isEqualToString:@""];
+        return [str containsString:@"FRIENDLY DECK"];
     }];
     NSArray *filteredLogArr = [logArr filteredArrayUsingPredicate:predicate];
     
@@ -80,7 +83,7 @@
     NSUInteger loc = self.prevZoneLogArr.count;
     NSUInteger len = zoneLogArr.count - loc;
     
-    if (len < 0) return @[];
+    if (len <= 0) return @[];
     
     NSRange newZoneLogRange = NSMakeRange(loc, len);
     NSArray<NSString *> *newZoneLogArr = [zoneLogArr subarrayWithRange:newZoneLogRange];

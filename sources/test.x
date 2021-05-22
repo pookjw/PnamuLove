@@ -2,15 +2,15 @@
 #import <hearthstone/UnityDefaultViewController.h>
 #import "LogReader.h"
 
-%hook UIViewController
+%hook UnityDefaultViewController
 - (void)viewDidAppear:(BOOL)animated {
 	%orig(animated);
-	NSLog(@"pnamulove Hello!");
 
 	UIView *testView = [UIView new];
     testView.backgroundColor = UIColor.redColor;
     testView.translatesAutoresizingMaskIntoConstraints = NO;
     testView.userInteractionEnabled = NO;
+    testView.layer.opacity = 0.5;
     [self.view addSubview:testView];
     [NSLayoutConstraint activateConstraints:@[
         [testView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
@@ -22,7 +22,7 @@
     [[LogReader sharedInstance] startObserving];
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(getEvent:)
-                                               name:LogReaderZoneNotificationName
+                                               name:kLogReaderZoneNotificationName
                                              object:[LogReader sharedInstance]];
 }
 
