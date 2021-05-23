@@ -1,6 +1,7 @@
 #import "MainViewController.h"
 #import "MainViewModel.h"
 #import "UIViewController+SpinnerView.h"
+#import "UIViewController+Alert.h"
 
 @interface MainViewController () <UICollectionViewDelegate>
 @property (weak, atomic) UICollectionView *collectionView;
@@ -75,11 +76,77 @@
     return dataSource;
 }
 
+- (void)downloadAllCardsFile {
+    [self addSpinnerView];
+    __weak typeof(self) weakSelf = self;
+    [self.viewModel downloadAllCardsWithErrorHandler:^(NSError * _Nullable error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf removeAllSpinnerview];
+
+            if (error) {
+                [weakSelf showAlertWithTitle:@"ERROR!" message:error.localizedDescription];
+            } else {
+                [weakSelf showAlertWithTitle:@"Success!" message:nil];
+            }
+        });
+    }];
+}
+
+- (void)downloadDeckListFileFromCode:(NSString *)deckListCode {
+    [self addSpinnerView];
+    __weak typeof(self) weakSelf = self;
+    [self.viewModel downloadDeckListFromCode:deckListCode
+                                            errorHandler:^(NSError * _Nullable error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf removeAllSpinnerview];
+
+            if (error) {
+                [weakSelf showAlertWithTitle:@"ERROR!" message:error.localizedDescription];
+            } else {
+                [weakSelf showAlertWithTitle:@"Success!" message:nil];
+            }
+        });
+    }];
+}
+
+- (void)showDeckListInputAlert {
+    [self showAlertWithTitle:@"Enter Deck List Code"
+                     message:nil
+  textFieldCompletionHandler:^(NSString * _Nullable string){
+      if (string) {
+          [self downloadDeckListFileFromCode:string];
+      }
+  }];
+}
+
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
-    [self.viewModel handleSelectionFor:indexPath];    
+    MainCellItem * _Nullable cellItem = [self.viewModel cellItemAtIndexPath:indexPath];
+
+    if (cellItem == nil) return;
+    MainCellItemType type = cellItem.type;
+
+    switch (type) {
+        case MainCellItemTypeEnterDeckListCode:
+            [self showDeckListInputAlert];
+            break;
+        case MainCellItemTypeGetAllCardsFile:
+            [self downloadAllCardsFile];
+            break;
+        case MainCellItemTypeRemoveDeckListFile:
+            [self.viewModel removeDeckListFile];
+            break;
+        case MainCellItemTypeRemoveAllCardsFile:
+            [self.viewModel removeAllCardsFile];
+            break;
+        case MainCellItemTypeRemoveAllFiles:
+            [self.viewModel removeAllFiles];
+            break;
+        default:
+            break;
+    }
 }
 
 @end

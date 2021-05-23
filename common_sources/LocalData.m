@@ -58,6 +58,19 @@
     return dic;
 }
 
+- (void)removeDeckListFile {
+    [NSFileManager.defaultManager removeItemAtURL:self.deckListFileURL error:nil];
+}
+
+- (void)removeAllCardsFile {
+    [NSFileManager.defaultManager removeItemAtURL:self.allCardsFileURL error:nil];
+}
+
+- (void)removeAllFiles {
+    [NSFileManager.defaultManager removeItemAtURL:self.baseURL error:nil];
+    [self createBaseURLDirIfNeeded];
+}
+
 - (void)createBaseURLDirIfNeeded {
     if (![NSFileManager.defaultManager fileExistsAtPath:@""]) {
             [NSFileManager.defaultManager createDirectoryAtURL:self.baseURL withIntermediateDirectories:YES attributes:nil error:nil];

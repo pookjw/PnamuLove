@@ -36,7 +36,13 @@
         case MainCellItemTypeEnterDeckListCode:
             return @"Enter Deck List Code";
         case MainCellItemTypeGetAllCardsFile:
-            return @"Refresh All Cards file";
+            return @"Download All Cards File";
+        case MainCellItemTypeRemoveDeckListFile:
+            return @"Remove Deck List File";
+        case MainCellItemTypeRemoveAllCardsFile:
+            return @"Remove All Cards File";
+        case MainCellItemTypeRemoveAllFiles:
+            return @"Remove All Files";
         default:
             return @"(unknown MainCellItemType)";
     }
