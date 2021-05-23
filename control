@@ -2,7 +2,7 @@ Package: com.pookjw.pnamulove
 Name: PnamuLove
 Version: 1.0
 Architecture: iphoneos-arm
-Description: Hearthstone Deck Tracker
+Description: Hearthstone Deck Tracker for jailbroken iOS devices
 Maintainer: pookjw
 Author: pookjw
 Section: Tweaks
