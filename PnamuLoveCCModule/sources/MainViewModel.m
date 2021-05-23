@@ -1,5 +1,6 @@
 #import "MainViewModel.h"
 #import "DeckListDownloader.h"
+#import "AllCardsDownloader.h"
 
 @implementation MainViewModel
 
@@ -27,6 +28,10 @@
     }
 
     [DeckListDownloader.sharedInstance downloadDeckListFromCode:@"AAEBAa0GHrkG9xPDFoO7Are7Arq7Ati7Auq/AtHBAvDPAujQApDTAsvmApeHA+aIA/yjA5mpA/KsA4GxA5GxA5O6A9fOA/bWA+LeA/vfA/jjA8GfBJegBKGgBKigBAAA" errorHandler:^(NSError * _Nullable error){
+        NSLog(@"%@", error.localizedDescription);
+    }];
+
+    [AllCardsDownloader.sharedInstance downloadAllCardsWithErrorHandler:^(NSError * _Nullable error){
         NSLog(@"%@", error.localizedDescription);
     }];
 }

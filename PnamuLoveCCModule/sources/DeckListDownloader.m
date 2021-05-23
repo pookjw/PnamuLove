@@ -43,8 +43,6 @@
                 return;
             }
 
-            NSLog(@"%@",  [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             NSUInteger statusCode = httpResponse.statusCode;
 
