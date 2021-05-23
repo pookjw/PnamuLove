@@ -31,28 +31,11 @@
 }
 
 - (HSCard * _Nullable)createHSCardFromCardId:(NSString *)cardId {
-    NSDictionary * __block _Nullable card = nil;
-    [self.allCardsObject enumerateKeysAndObjectsUsingBlock:^(NSString *tmpCardSet, id tmpCards, BOOL * _Nonnull stop1) {
-        if (![tmpCards isKindOfClass:[NSArray class]]) return;
-        [tmpCards enumerateObjectsUsingBlock:^(NSDictionary *tmpCard, NSUInteger idx, BOOL * _Nonnull stop2) {
-            NSString *tmpCardId = tmpCard[@"cardId"];
-            if ([cardId isEqualToString:tmpCardId]) {
-                *stop1 = YES;
-                *stop2 = YES;
-                card = tmpCard;
-            }
-        }];
-    }];
-
-    if (card) {
-        return [self convertToHSCardFromAllCardsDic:card];
-    } else {
-        return nil;
-    }
+    return [self createHSCardFromDicKey:@"cardId" value:cardId];
 }
 
 - (HSCard * _Nullable)createHSCardFromDbfId:(NSString *)dbfId {
-    return nil;
+    return [self createHSCardFromDicKey:@"dbfId" value:dbfId];
 }
 
 - (NSArray<HSCard *> * _Nullable)createHSCardFromLocalDeckList {
@@ -72,6 +55,28 @@
                                     dbfId:dic[@"dbfId"]
                                      name:dic[@"name"]
                                      cost:[(NSNumber *)dic[@"cost"] integerValue]];
+}
+
+- (HSCard * _Nullable)createHSCardFromDicKey:(NSString *)key
+                                       value:(NSString *)value {
+    NSDictionary * __block _Nullable card = nil;
+    [self.allCardsObject enumerateKeysAndObjectsUsingBlock:^(NSString *tmpCardSet, id tmpCards, BOOL * _Nonnull stop1) {
+        if (![tmpCards isKindOfClass:[NSArray class]]) return;
+        [tmpCards enumerateObjectsUsingBlock:^(NSDictionary *tmpCard, NSUInteger idx, BOOL * _Nonnull stop2) {
+            NSString *tmpValue = tmpCard[key];
+            if ([value isEqualToString:tmpValue]) {
+                *stop1 = YES;
+                *stop2 = YES;
+                card = tmpCard;
+            }
+        }];
+    }];
+
+    if (card) {
+        return [self convertToHSCardFromAllCardsDic:card];
+    } else {
+        return nil;
+    }
 }
 
 @end
