@@ -49,6 +49,12 @@
     [self.readTimer invalidate];
 }
 
+- (NSURL *)logsURL {
+    NSURL *documentURL = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject;
+    NSURL *logsURL = [documentURL URLByAppendingPathComponent:@"Logs"];
+    return logsURL;
+}
+
 - (void)sendLogEvent {
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
         NSArray<NSString *> *newLogArrayOfZone = [self newLogArrayOfZoneAndSavePrev];
@@ -67,10 +73,8 @@
 }
 
 - (NSArray<NSString *> *)logArrayOf:(NSString *)name {
-    NSURL *documentUrl = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject;
-    NSURL *logsUrl = [documentUrl URLByAppendingPathComponent:@"Logs"];
-    NSURL *logUrl = [[logsUrl URLByAppendingPathComponent:name] URLByAppendingPathExtension:@"log"];
-    NSData *logData = [NSData dataWithContentsOfURL:logUrl];
+    NSURL *logURL = [[self.logsURL URLByAppendingPathComponent:name] URLByAppendingPathExtension:@"log"];
+    NSData *logData = [NSData dataWithContentsOfURL:logURL];
     NSString *logStr = [[NSString alloc] initWithData:logData encoding:NSUTF8StringEncoding];
     NSArray<NSString *> *logArr = [logStr componentsSeparatedByString:@"\n"];
     

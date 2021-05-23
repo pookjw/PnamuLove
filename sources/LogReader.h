@@ -4,6 +4,7 @@ static NSString * const kLogReaderNewLogNotificationName = @"kLogReaderNewLogNot
 
 @interface LogReader : NSObject
 @property (class, readonly) LogReader *sharedInstance;
+@property (readonly) NSURL *logsURL;
 - (void)startObserving;
 - (void)stopObserving;
 @end
