@@ -3,6 +3,7 @@
 @interface LogReader ()
 @property (weak) NSTimer *readTimer;
 @property NSArray<NSString *> *prevZoneLogArr;
+@property NSArray<NSString *> *prevLoadingScreenLogArr;
 @end
 
 @implementation LogReader
@@ -23,6 +24,7 @@
     if (self) {
         self.readTimer = nil;
         self.prevZoneLogArr = @[];
+        self.prevLoadingScreenLogArr = @[];
     }
     
     return self;
@@ -49,11 +51,17 @@
 
 - (void)sendLogEvent {
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
-        NSArray<NSString *> * newLogArrayOfZone = [self newLogArrayOfZone];
-        if (newLogArrayOfZone.count > 0) {
-            [NSNotificationCenter.defaultCenter postNotificationName:kLogReaderZoneNotificationName
+        NSArray<NSString *> *newLogArrayOfZone = [self newLogArrayOfZoneAndSavePrev];
+        NSArray<NSString *> *newLogArrayOfLoadingScreen = [self newLogArrayOfLoadingScreenAndSavePrev];
+        
+        NSMutableArray<NSString *> *allNewLogs = [@[] mutableCopy];
+        [allNewLogs addObjectsFromArray:newLogArrayOfZone];
+        [allNewLogs addObjectsFromArray:newLogArrayOfLoadingScreen];
+
+        for (NSString *log in allNewLogs) {
+            [NSNotificationCenter.defaultCenter postNotificationName:kLogReaderNewLogNotificationName
                                                    object:self
-                                                 userInfo:@{@"log": newLogArrayOfZone}];
+                                                 userInfo:@{@"log": log}];
         }
     });
 }
@@ -68,8 +76,7 @@
     
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(NSString *str,
                                                                    NSDictionary<NSString *,id> * _Nullable bindings) {
-        // return ![str isEqualToString:@""];
-        return [str containsString:@"FRIENDLY DECK"];
+        return ![str isEqualToString:@""];
     }];
     NSArray *filteredLogArr = [logArr filteredArrayUsingPredicate:predicate];
     
@@ -78,7 +85,7 @@
     return filteredLogArr;
 }
 
-- (NSArray<NSString *> *)newLogArrayOfZone {
+- (NSArray<NSString *> *)newLogArrayOfZoneAndSavePrev {
     NSArray<NSString *> * zoneLogArr = [self logArrayOf:@"Zone"];
     NSUInteger loc = self.prevZoneLogArr.count;
     NSUInteger len = zoneLogArr.count - loc;
@@ -88,8 +95,26 @@
     NSRange newZoneLogRange = NSMakeRange(loc, len);
     NSArray<NSString *> *newZoneLogArr = [zoneLogArr subarrayWithRange:newZoneLogRange];
     
+    // Save prevZoneLogArr...
     self.prevZoneLogArr = zoneLogArr;
+
     return newZoneLogArr;
+}
+
+- (NSArray<NSString *> *)newLogArrayOfLoadingScreenAndSavePrev {
+    NSArray<NSString *> * loadingScreenLogArr = [self logArrayOf:@"LoadingScreen"];
+    NSUInteger loc = self.prevLoadingScreenLogArr.count;
+    NSUInteger len = loadingScreenLogArr.count - loc;
+    
+    if (len <= 0) return @[];
+    
+    NSRange newLoadingScreenLogRange = NSMakeRange(loc, len);
+    NSArray<NSString *> *newLoadingScreenLogArr = [loadingScreenLogArr subarrayWithRange:newLoadingScreenLogRange];
+    
+    // Save prevLoadingScreenLogArr...
+    self.prevLoadingScreenLogArr = loadingScreenLogArr;
+
+    return newLoadingScreenLogArr;
 }
 
 @end

@@ -24,10 +24,10 @@
 
 - (BOOL)isEqual:(id)object {
     if ([object isKindOfClass:[MainCellItem class]]) {
-        MainCellItem *compareMainCellItem = (MainCellItem *)object;
-        return (self.type == compareMainCellItem.type); 
+        MainCellItem *comparisonMainCellItem = (MainCellItem *)object;
+        return (self.type == comparisonMainCellItem.type); 
     } else {
-        return NO;
+        return [super isEqual:object];
     }
 }
 

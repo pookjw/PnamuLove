@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
 #import <hearthstone/UnityDefaultViewController.h>
-#import "LogReader.h"
+#import "LogParser.h"
 
 %hook UnityDefaultViewController
 - (void)viewDidAppear:(BOOL)animated {
@@ -19,16 +19,28 @@
         [testView.heightAnchor constraintEqualToConstant:100]
     ]];
 
-    [LogReader.sharedInstance startObserving];
+    [LogParser.sharedInstance startObserving];
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(getEvent:)
-                                               name:kLogReaderZoneNotificationName
-                                             object:LogReader.sharedInstance];
+                                               name:kLogParserDidStartTheGameNotificationName
+                                             object:LogParser.sharedInstance];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(getEvent:)
+                                               name:kLogParserDidEndTheGameNotificationName
+                                             object:LogParser.sharedInstance];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(getEvent:)
+                                               name:kLogParserDidRemoveCardFromDeckNotificationName
+                                             object:LogParser.sharedInstance];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(getEvent:)
+                                               name:kLogParserDidAddCardToDeckNotificationName
+                                             object:LogParser.sharedInstance];
 }
 
 %new
-- (void)getEvent:(NSDictionary *)userInfo {
-    NSLog(@"%@", userInfo);
+- (void)getEvent:(NSNotification *)notification {
+    NSLog(@"%@, %@", notification.name, notification.userInfo);
 }
 
 %end
