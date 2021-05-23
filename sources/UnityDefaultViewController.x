@@ -1,20 +1,31 @@
 #import <hearthstone/UnityDefaultViewController.h>
+#import "DeckTrackerViewController.h"
+
+static __weak DeckTrackerViewController *deckTrackerViewController = nil;
 
 %hook UnityDefaultViewController
 - (void)viewDidAppear:(BOOL)animated {
 	%orig(animated);
+    [self performSelector:@selector(addDeckTrackerViewControllerIfNeeded)];
+}
 
-	UIView *testView = [UIView new];
-    testView.backgroundColor = UIColor.redColor;
-    testView.translatesAutoresizingMaskIntoConstraints = NO;
-    testView.userInteractionEnabled = NO;
-    testView.layer.opacity = 0.5;
-    [self.view addSubview:testView];
+%new
+- (void)addDeckTrackerViewControllerIfNeeded {
+    if (deckTrackerViewController) return;
+
+    DeckTrackerViewController *_deckTrackerViewController = [DeckTrackerViewController new];
+    deckTrackerViewController = _deckTrackerViewController;
+    [self addChildViewController:_deckTrackerViewController];
+
+    UIView *deckTrackerView = _deckTrackerViewController.view;
+    [self.view addSubview:deckTrackerView];
+    deckTrackerView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
-        [testView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
-        [testView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor],
-        [testView.widthAnchor constraintEqualToConstant:100],
-        [testView.heightAnchor constraintEqualToConstant:100]
+        [deckTrackerView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+        [deckTrackerView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+        [deckTrackerView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+        [deckTrackerView.widthAnchor constraintEqualToConstant:150]
     ]];
 }
+
 %end

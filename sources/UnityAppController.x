@@ -7,6 +7,7 @@
     [self performSelector:@selector(configureLogConfig)];
     [self performSelector:@selector(removeOldLogs)];
     [self performSelector:@selector(startLogParser)];
+    [self performSelector:@selector(reisterTestObservers)];
     return %orig(application, launchOptions);
 }
 
@@ -39,6 +40,10 @@ ScreenPrinting=false\n\
 %new
 - (void)startLogParser {
     [LogParser.sharedInstance startObserving];
+}
+
+%new
+- (void)reisterTestObservers {
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(gotEvent:)
                                                name:kLogParserDidStartTheGameNotificationName
