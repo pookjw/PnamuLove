@@ -3,6 +3,7 @@
 
 @interface DeckTrackerViewController ()
 @property (weak) UICollectionView *collectionView;
+@property (weak) UIButton *toggleHiddenButton;
 @property DeckTrackerViewModel *viewModel;
 @end
 
@@ -12,6 +13,7 @@
     [super viewDidLoad];
     [self setAttributes];
     [self configureCollectionView];
+    [self configureToggleHiddenButton];
     [self configureViewModel];
     [self bind];
 }
@@ -97,6 +99,32 @@
         return cell;
     }];
     return dataSource;
+}
+
+- (void)configureToggleHiddenButton {
+    __weak typeof(self) weakSelf = self;
+
+    UIAction *action = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
+        if (weakSelf.collectionView.hidden) {
+            weakSelf.collectionView.hidden = NO;
+        } else {
+            weakSelf.collectionView.hidden = YES;
+        }
+    }];
+
+    UIButton *toggleHiddenButton = [[UIButton alloc] initWithFrame:CGRectZero primaryAction:action];
+    self.toggleHiddenButton = toggleHiddenButton;
+
+    toggleHiddenButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:toggleHiddenButton];
+    [NSLayoutConstraint activateConstraints:@[
+        [toggleHiddenButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+        [toggleHiddenButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor]
+    ]];
+
+    [toggleHiddenButton setTitle:@"Toggle" forState:UIControlStateNormal];
+    [toggleHiddenButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    toggleHiddenButton.backgroundColor = UIColor.blackColor;
 }
 
 @end
