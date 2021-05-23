@@ -3,7 +3,7 @@
 static NSString * const kLogReaderZoneNotificationName = @"kLogReaderZoneNotificationName";
 
 @interface LogReader : NSObject
-+ (instancetype)sharedInstance;
+@property (class, readonly) LogReader *sharedInstance;
 - (void)startObserving;
 - (void)stopObserving;
 @end

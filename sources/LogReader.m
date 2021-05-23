@@ -7,7 +7,7 @@
 
 @implementation LogReader
 
-+ (instancetype)sharedInstance {
++ (LogReader *)sharedInstance {
     static LogReader *sharedInstance = nil;
     static dispatch_once_t onceToken;
     

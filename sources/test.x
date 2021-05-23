@@ -19,11 +19,11 @@
         [testView.heightAnchor constraintEqualToConstant:100]
     ]];
 
-    [[LogReader sharedInstance] startObserving];
+    [LogReader.sharedInstance startObserving];
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(getEvent:)
                                                name:kLogReaderZoneNotificationName
-                                             object:[LogReader sharedInstance]];
+                                             object:LogReader.sharedInstance];
 }
 
 %new

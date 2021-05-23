@@ -6,4 +6,4 @@ Description: Hearthstone Deck Tracker Helper
 Maintainer: pookjw
 Author: pookjw
 Section: Tweaks
-Depends: mobilesubstrate (>= 0.9.5000), com.opa334.ccsupport
+Depends: mobilesubstrate (>= 0.9.5000), com.opa334.ccsupport, com.rpetrich.rocketbootstrap
