@@ -39,7 +39,22 @@
 }
 
 - (NSArray<HSCard *> * _Nullable)createHSCardFromLocalDeckList {
-    return nil;
+    NSMutableArray<HSCard *> * __block results = [@[] mutableCopy];
+    NSArray<NSDictionary *> *cards = self.deckListObject[@"cards"];
+
+    [cards enumerateObjectsUsingBlock:^(NSDictionary *tmpCardDic, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSString *tmpId = [(NSNumber *)tmpCardDic[@"id"] stringValue];
+        HSCard * _Nullable tmpCard = [self createHSCardFromDbfId:tmpId];
+        if (tmpCard) {
+            [results addObject:tmpCard];
+        }
+    }];
+
+    if (results.count == 0) {
+        return nil;
+    } else {
+        return [results copy];
+    }
 }
 
 - (void)refreshDeckListObjectCache {
@@ -54,7 +69,7 @@
     return [[HSCard alloc] initWithCardId:dic[@"cardId"]
                                     dbfId:dic[@"dbfId"]
                                      name:dic[@"name"]
-                                     cost:[(NSNumber *)dic[@"cost"] integerValue]];
+                                     cost:[(NSNumber *)dic[@"cost"] unsignedIntegerValue]];
 }
 
 - (HSCard * _Nullable)createHSCardFromDicKey:(NSString *)key
@@ -63,8 +78,16 @@
     [self.allCardsObject enumerateKeysAndObjectsUsingBlock:^(NSString *tmpCardSet, id tmpCards, BOOL * _Nonnull stop1) {
         if (![tmpCards isKindOfClass:[NSArray class]]) return;
         [tmpCards enumerateObjectsUsingBlock:^(NSDictionary *tmpCard, NSUInteger idx, BOOL * _Nonnull stop2) {
-            NSString *tmpValue = tmpCard[key];
-            if ([value isEqualToString:tmpValue]) {
+            NSString *tmpValue1;
+            id tmpValue2 = tmpCard[key];
+
+            if ([tmpValue2 isKindOfClass:[NSString class]]) {
+                tmpValue1 = tmpValue2;
+            } else if ([tmpValue2 isKindOfClass:[NSNumber class]]) {
+                tmpValue1 = [tmpValue2 stringValue];
+            }
+
+            if ([value isEqualToString:tmpValue1]) {
                 *stop1 = YES;
                 *stop2 = YES;
                 card = tmpCard;

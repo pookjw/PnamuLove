@@ -24,7 +24,7 @@ static __weak DeckTrackerViewController *deckTrackerViewController = nil;
         [deckTrackerView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
         [deckTrackerView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
         [deckTrackerView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
-        [deckTrackerView.widthAnchor constraintEqualToConstant:150]
+        [deckTrackerView.widthAnchor constraintEqualToConstant:300]
     ]];
 }
 

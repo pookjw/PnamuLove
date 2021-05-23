@@ -4,7 +4,7 @@
 #import "UIViewController+Alert.h"
 
 @interface MainViewController () <UICollectionViewDelegate>
-@property (weak, atomic) UICollectionView *collectionView;
+@property (weak) UICollectionView *collectionView;
 @property MainViewModel *viewModel;
 @end
 

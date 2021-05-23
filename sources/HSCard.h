@@ -8,5 +8,5 @@
 - (instancetype)initWithCardId:(NSString *)cardId
                          dbfId:(NSString *)dbfId
                           name:(NSString *)name
-                          cost:(NSInteger)cost;
+                          cost:(NSUInteger)cost;
 @end

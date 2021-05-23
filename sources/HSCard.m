@@ -5,7 +5,7 @@
 - (instancetype)initWithCardId:(NSString *)cardId
                          dbfId:(NSString *)dbfId
                           name:(NSString *)name
-                          cost:(NSInteger)cost {
+                          cost:(NSUInteger)cost {
     self = [self init];
 
     if (self) {
@@ -21,7 +21,7 @@
 - (BOOL)isEqual:(id)object {
     if ([object isKindOfClass:[HSCard class]]) {
         HSCard *comparisionHSCard = (HSCard *)object;
-        return self.cardId == comparisionHSCard.cardId;
+        return [self.cardId isEqualToString:comparisionHSCard.cardId];
     } else {
         return [super isEqual:object];
     }
